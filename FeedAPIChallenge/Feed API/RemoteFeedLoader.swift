@@ -24,8 +24,8 @@ public final class RemoteFeedLoader: FeedLoader {
 			case let .success((data, response)):
 				if response.statusCode == 200 {
 					do {
-						_ = try JSONSerialization.jsonObject(with: data)
-						completion(.success([]))
+						let feedImages = try FeedImageMapper.map(data: data)
+						completion(.success(feedImages))
 					} catch {
 						completion(.failure(Error.invalidData))
 					}
