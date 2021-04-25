@@ -38,3 +38,33 @@ public final class RemoteFeedLoader: FeedLoader {
 		}
 	}
 }
+
+private struct FeedImageMapper {
+	struct Root: Decodable {
+		let images: [FeedImageDTO]
+		struct FeedImageDTO: Decodable {
+			let id: UUID
+			let description: String?
+			let location: String?
+			let url: URL
+			private enum CodingKeys: String, CodingKey {
+				case id = "image_id"
+				case description = "image_desc"
+				case location = "image_loc"
+				case url = "image_url"
+			}
+		}
+	}
+
+	static func map(data: Data) throws -> [FeedImage] {
+		let feedImageDTO = try JSONDecoder().decode(Root.self, from: data)
+		return feedImageDTO.images.map {
+			FeedImage(
+				id: $0.id,
+				description: $0.description,
+				location: $0.location,
+				url: $0.url
+			)
+		}
+	}
+}
