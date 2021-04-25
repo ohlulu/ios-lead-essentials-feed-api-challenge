@@ -41,7 +41,7 @@ public final class RemoteFeedLoader: FeedLoader {
 
 private struct FeedImageMapper {
 	struct Root: Decodable {
-		let images: [FeedImageDTO]
+		let items: [FeedImageDTO]
 		struct FeedImageDTO: Decodable {
 			let id: UUID
 			let description: String?
@@ -58,7 +58,7 @@ private struct FeedImageMapper {
 
 	static func map(data: Data) throws -> [FeedImage] {
 		let feedImageDTO = try JSONDecoder().decode(Root.self, from: data)
-		return feedImageDTO.images.map {
+		return feedImageDTO.items.map {
 			FeedImage(
 				id: $0.id,
 				description: $0.description,
